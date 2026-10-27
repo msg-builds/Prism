@@ -2,11 +2,10 @@ import { SettingsPath } from 'twenty-shared/types';
 
 import { useAuth } from '@/auth/hooks/useAuth';
 import { currentUserState } from '@/auth/states/currentUserState';
-import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
 import { billingState } from '@/client-config/states/billingState';
 import { supportChatState } from '@/client-config/states/supportChatState';
 import { permissionFlagMapSelector } from '@/settings/roles/states/permissionFlagMapSelector';
-import { getDocumentationUrl } from '@/support/utils/getDocumentationUrl';
+import { PRISM_SOURCE_URL } from '@/support/constants/PrismSourceUrl';
 import { useIsFeatureEnabled } from '@/workspace/hooks/useIsFeatureEnabled';
 import { type NavigationDrawerItemModifier } from '@/ui/navigation/navigation-drawer/types/NavigationDrawerItemModifier';
 import { type NavigationDrawerItemIndentationLevel } from '@/ui/navigation/navigation-drawer/types/NavigationDrawerItemIndentationLevel';
@@ -17,13 +16,13 @@ import {
   IconAppWindow,
   IconApps,
   IconAt,
+  IconBrandGithub,
   IconCalendarEvent,
   IconCode,
   IconColorSwatch,
   type IconComponent,
   IconCreditCard,
   IconDoorEnter,
-  IconHelpCircle,
   IconHierarchy,
   IconMail,
   IconMessage,
@@ -61,7 +60,6 @@ const useSettingsNavigationItems = (): SettingsNavigationSection[] => {
   const billing = useAtomStateValue(billingState);
   const { signOut } = useAuth();
   const supportChat = useAtomStateValue(supportChatState);
-  const currentWorkspaceMember = useAtomStateValue(currentWorkspaceMemberState);
 
   const isBillingEnabled = billing?.isBillingEnabled ?? false;
   const currentUser = useAtomStateValue(currentUserState);
@@ -198,24 +196,15 @@ const useSettingsNavigationItems = (): SettingsNavigationSection[] => {
           isHidden: !isAdminEnabled,
         },
         {
-          label: t`Community`,
-          path: SettingsPath.Community,
-          Icon: IconUsers,
-          isHidden: !permissionFlagMap[PermissionFlagType.WORKSPACE],
-        },
-        {
           label: t`Support`,
           onClick: () => window.FrontChat?.('show'),
           Icon: IconMessage,
           isHidden: !isSupportChatConfigured,
         },
         {
-          label: t`Documentation`,
-          onClick: () =>
-            openUrlInNewTab(
-              getDocumentationUrl({ locale: currentWorkspaceMember?.locale }),
-            ),
-          Icon: IconHelpCircle,
+          label: t`Source code`,
+          onClick: () => openUrlInNewTab(PRISM_SOURCE_URL),
+          Icon: IconBrandGithub,
         },
         {
           label: t`Logout`,

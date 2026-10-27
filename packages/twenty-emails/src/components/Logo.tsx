@@ -1,8 +1,16 @@
 import { type I18n } from '@lingui/core';
-import { Img } from 'react-email';
+import { Text } from 'react-email';
 
+import { canvasTheme } from 'src/common-style';
+
+// Text, not an image: the private deployment has no public host for assets
 const logoStyle = {
-  marginBottom: '40px',
+  margin: '0 0 40px 0',
+  fontFamily: "'Iowan Old Style', Georgia, serif",
+  fontSize: '24px',
+  lineHeight: '28px',
+  letterSpacing: '0.02em',
+  color: canvasTheme.font.colors.brand,
 };
 
 type LogoProps = {
@@ -11,12 +19,8 @@ type LogoProps = {
 
 export const Logo = ({ i18n }: LogoProps) => {
   return (
-    <Img
-      src="https://app.twenty.com/images/icons/windows11/Square150x150Logo.scale-100.png"
-      alt={i18n._('Twenty logo')}
-      width="40"
-      height="40"
-      style={logoStyle}
-    />
+    <Text style={logoStyle} aria-label={i18n._('Nebula logo')}>
+      Nebula
+    </Text>
   );
 };

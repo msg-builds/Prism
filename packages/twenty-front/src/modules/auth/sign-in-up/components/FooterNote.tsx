@@ -4,6 +4,7 @@ import { Trans } from '@lingui/react/macro';
 import { useWorkspaceBypass } from '@/auth/sign-in-up/hooks/useWorkspaceBypass';
 import { useIsCurrentLocationOnAWorkspace } from '@/domain-manager/hooks/useIsCurrentLocationOnAWorkspace';
 import { ONBOARDING_CONTENT_BLOCK_WIDTH } from '@/onboarding/constants/OnboardingContentBlockWidth';
+import { PRISM_SOURCE_URL } from '@/support/constants/PrismSourceUrl';
 import { themeCssVariables } from 'twenty-ui/theme';
 
 const StyledCopyContainer = styled.div`
@@ -73,7 +74,10 @@ export const FooterNote = () => {
         >
           Twenty
         </a>
-        .
+        .{' '}
+        <a href={PRISM_SOURCE_URL} target="_blank" rel="noopener noreferrer">
+          <Trans>Source</Trans>
+        </a>
       </StyledCopyContainer>
     );
   }
@@ -94,6 +98,10 @@ export const FooterNote = () => {
         rel="noopener noreferrer"
       >
         <Trans>Built on Twenty</Trans>
+      </a>
+      <StyledSeparator>•</StyledSeparator>
+      <a href={PRISM_SOURCE_URL} target="_blank" rel="noopener noreferrer">
+        <Trans>Source</Trans>
       </a>
     </StyledLinksContainer>
   );
