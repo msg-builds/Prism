@@ -18,6 +18,8 @@ env:
   NX_DAEMON: 'false'
   NX_NO_CLOUD: 'true'
   NODE_OPTIONS: --max-old-space-size=6144
+  # Workspace builds use npx; missing tools must fail rather than be downloaded.
+  npm_config_offline: 'true'
 
 jobs:
   frontend-build:

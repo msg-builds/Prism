@@ -50512,6 +50512,7 @@ __metadata:
     knip: "npm:^6.37.0"
     nx: "npm:22.7.12"
     oxfmt: "npm:0.72.0"
+    rimraf: "npm:^5.0.5"
     tsx: "npm:^4.17.0"
     verdaccio: "npm:^6.3.1"
   languageName: unknown

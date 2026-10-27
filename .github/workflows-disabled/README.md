@@ -16,6 +16,8 @@ CI installs only the root tools, frontend and transitive workspace dependencies,
 using the checked-in Yarn release, hardened resolution/checksum validation and
 disabled dependency scripts. Local hardlinks reduce duplicate package storage;
 there is no inherited monorepo node_modules cache or runner filesystem cleanup.
+Build scripts' `npx` commands run offline; missing tools fail instead of being
+downloaded outside the lockfile. The root tools include the existing locked rimraf.
 `ubuntu-latest` uses standard runners available to this repository, rather than
 Twenty's unavailable `ubuntu-latest-8-cores` larger runners.
 
