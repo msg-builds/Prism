@@ -1,0 +1,60 @@
+name: Prism CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: 'true'
+  NX_DAEMON: 'false'
+  NX_NO_CLOUD: 'true'
+  NODE_OPTIONS: --max-old-space-size=6144
+
+jobs:
+  frontend-build:
+    name: Frontend production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/yarn-install
+      - name: Build frontend dependencies serially
+        run: yarn nx run-many -t build -p twenty-front-component-renderer --parallel=1
+      - name: Build frontend
+        # Invoke Vite directly to keep the heap below this runner's memory limit.
+        run: yarn workspace twenty-front exec vite build
+        env:
+          NODE_ENV: production
+          REACT_APP_SERVER_BASE_URL: http://localhost:3000
+      - name: Verify frontend output
+        run: test -s packages/twenty-front/build/index.html
+
+  frontend-tests:
+    name: Frontend routing, charts and layout tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/yarn-install
+      - name: Build shared test dependencies
+        run: yarn nx run twenty-shared:build
+      - name: Run focused frontend tests
+        run: >-
+          yarn workspace twenty-front exec jest --ci --maxWorkers=2
+          --runTestsByPath
+          src/config/__tests__/apiProxyPrefixes.test.ts
+          src/modules/page-layout/widgets/graph/utils/__tests__/computeEffectiveValueRange.test.ts
+          src/modules/page-layout/widgets/utils/__tests__/getWidgetContentPadding.test.ts
