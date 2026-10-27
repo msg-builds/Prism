@@ -1,0 +1,14 @@
+# Shared platform: PG_DATABASE_URL, REDIS_URL and STORAGE_* come from the
+# platform's connection file; services reach it over its Docker network.
+x-platform: &platform
+  env_file: ${PRISM_PLATFORM_ENV_FILE}
+  networks: [default, platform]
+
+services:
+  server: *platform
+  worker: *platform
+
+networks:
+  platform:
+    name: ${PRISM_PLATFORM_NETWORK:-stargate-platform}
+    external: true
