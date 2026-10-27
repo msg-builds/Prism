@@ -1,0 +1,4 @@
+services:
+  server:
+    volumes:
+      - ./prism-frontend:/app/packages/twenty-server/dist/front:ro,Z
