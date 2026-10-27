@@ -1,7 +1,7 @@
 import { t } from '@lingui/core/macro';
 
 export const getStandardApplicationReadme =
-  (): string => t`Every Prism workspace starts with this app. It defines the shape of your CRM: the core objects, how they relate to each other, and the views and record pages your team works in. Marketplace apps, AI agents and your own customizations all build on top of it.
+  (): string => t`Every Nebula workspace starts with this app. It defines the shape of your CRM: the core objects, how they relate to each other, and the views and record pages your team works in. Marketplace apps, AI agents and your own customizations all build on top of it.
 
 ## ✨ What you get
 

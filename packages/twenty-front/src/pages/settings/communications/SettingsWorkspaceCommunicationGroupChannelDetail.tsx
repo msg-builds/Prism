@@ -261,7 +261,7 @@ export const SettingsWorkspaceCommunicationGroupChannelDetail = () => {
           <Section.Root>
             <Section.Header
               title={t`Sending domain`}
-              description={t`Add these records at your DNS provider. Prism checks them automatically.`}
+              description={t`Add these records at your DNS provider. Nebula checks them automatically.`}
             />
             <StyledSendingDomainColumn>
               <StyledInputRow>

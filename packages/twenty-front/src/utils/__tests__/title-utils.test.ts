@@ -52,7 +52,7 @@ describe('title-utils', () => {
     expect(getPageTitleFromPath('/settings/general')).toBe(
       'General - Settings',
     );
-    expect(getPageTitleFromPath('/')).toBe('Prism');
-    expect(getPageTitleFromPath('/random')).toBe('Prism');
+    expect(getPageTitleFromPath('/')).toBe('Nebula');
+    expect(getPageTitleFromPath('/random')).toBe('Nebula');
   });
 });

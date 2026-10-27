@@ -11,14 +11,13 @@ export const buildMcpServerCard = ({
 }: BuildMcpServerCardArgs) => ({
   $schema:
     'https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json',
-  name: 'com.twenty/twenty',
+  name: 'io.github.msg-builds/nebula-crm',
   version,
-  title: 'Twenty CRM',
+  title: 'Nebula CRM',
   description:
-    'Read and write your Twenty CRM data - companies, people, opportunities, tasks, notes and any custom objects - from AI assistants. Tools are discovered at runtime and scoped to the authenticated workspace.',
-  websiteUrl: 'https://twenty.com',
+    'Read and write your Nebula CRM data - companies, people, opportunities, tasks, notes and any custom objects - from AI assistants. Tools are discovered at runtime and scoped to the authenticated workspace.',
   repository: {
-    url: 'https://github.com/twentyhq/twenty',
+    url: 'https://github.com/msg-builds/Prism',
     source: 'github',
   },
   remotes: [

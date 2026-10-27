@@ -122,7 +122,7 @@ export const SignInUp = () => {
     }
 
     if (isGlobalScope) {
-      return t`Welcome to Prism`;
+      return t`Welcome to Nebula`;
     }
 
     const workspaceName = workspacePublicData?.displayName;

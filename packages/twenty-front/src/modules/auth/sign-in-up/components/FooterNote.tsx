@@ -66,7 +66,7 @@ export const FooterNote = () => {
   if (!isOnAWorkspace) {
     return (
       <StyledCopyContainer>
-        <Trans>Prism is built on</Trans>{' '}
+        <Trans>Nebula CRM is built on</Trans>{' '}
         <a
           href="https://github.com/twentyhq/twenty"
           target="_blank"

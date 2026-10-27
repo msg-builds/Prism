@@ -106,7 +106,7 @@ export const SettingsAiModelTiersPreview = () => {
                       ? t`No model is available for this mode.`
                       : tier.isPinned
                         ? t`Manually selected for this mode.`
-                        : t`Automatically selected by Prism for this mode.`
+                        : t`Automatically selected by Nebula for this mode.`
                   }
                 >
                   <StyledMode tabIndex={0}>
