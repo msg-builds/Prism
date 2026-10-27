@@ -33,7 +33,8 @@ jobs:
         run: yarn nx run-many -t build -p twenty-front-component-renderer --parallel=1
       - name: Build frontend
         # Invoke Vite directly to keep the heap below this runner's memory limit.
-        run: yarn workspace twenty-front exec vite build
+        working-directory: packages/twenty-front
+        run: ../../node_modules/.bin/vite build
         env:
           NODE_ENV: production
           REACT_APP_SERVER_BASE_URL: http://localhost:3000
