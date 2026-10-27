@@ -3,9 +3,10 @@
 # Usage: self-host/build-image.sh [rev]   (run anywhere with git and docker;
 # PRISM_GIT_DIR points at a bare clone when the cwd is not a checkout)
 #
-# The context is `git archive` of the revision, so uncommitted files and host
-# build output never reach the image. Base images are pinned by digest in
-# packages/twenty-docker/twenty/Dockerfile and dependencies by yarn.lock.
+# The context is `git archive` of the revision plus Twenty's Enterprise files
+# restored from upstream (restore-enterprise-files.sh), so uncommitted files
+# and host build output never reach the image. Base images are pinned by
+# digest in packages/twenty-docker/twenty/Dockerfile, dependencies by yarn.lock.
 set -euo pipefail
 
 REV="${1:-HEAD}"
@@ -22,17 +23,23 @@ if [ -z "${PRISM_GIT_DIR:-}" ] && [ "$REV" = "HEAD" ] && [ -n "$(git status --po
   echo "Working tree is dirty; the image is built from the commit, not these changes." >&2
 fi
 
-"${GIT[@]}" archive --format=tar "$SHA" | docker build \
+CONTEXT="$(mktemp -d)"
+trap 'rm -rf "$CONTEXT"' EXIT
+"${GIT[@]}" archive --format=tar "$SHA" | tar -x -C "$CONTEXT"
+PRISM_GIT_DIR="$("${GIT[@]}" rev-parse --absolute-git-dir)" \
+  "$CONTEXT/self-host/restore-enterprise-files.sh" "$CONTEXT"
+
+docker build \
   --target twenty \
-  -f packages/twenty-docker/twenty/Dockerfile \
+  -f "$CONTEXT/packages/twenty-docker/twenty/Dockerfile" \
   --build-arg APP_VERSION="${UPSTREAM_VERSION}" \
   --label org.opencontainers.image.title=Prism \
   --label org.opencontainers.image.description="Prism CRM (modified Twenty ${UPSTREAM_VERSION}), server and frontend" \
   --label org.opencontainers.image.source=https://github.com/msg-builds/Prism \
   --label org.opencontainers.image.revision="$SHA" \
   --label org.opencontainers.image.created="$CREATED" \
-  --label org.opencontainers.image.licenses=AGPL-3.0-only \
+  --label org.opencontainers.image.licenses="AGPL-3.0-only AND MIT AND LicenseRef-Twenty-Commercial" \
   -t "$TAG" \
-  -
+  "$CONTEXT"
 
 docker image inspect --format '{{.Id}}' "$TAG" | sed "s|^|${TAG} |"

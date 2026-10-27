@@ -22,6 +22,23 @@ env:
   npm_config_offline: 'true'
 
 jobs:
+  enterprise-files-absent:
+    name: No Twenty Enterprise file is committed
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+      - name: Check tracked files against the manifest and the licence marker
+        run: |
+          listed="$(git ls-files | grep -x -F -f <(grep -v '^#' self-host/enterprise-files.txt | cut -d' ' -f2-) || true)"
+          marked="$(git grep -l -F '/* @license Enterprise */' -- . ':!LICENSE' ':!rebrand targets.md' ':!.github/workflows/ci.yaml' || true)"
+          if [ -n "$listed$marked" ]; then
+            printf 'Enterprise-licensed files must not be committed:\n%s\n%s\n' "$listed" "$marked"
+            exit 1
+          fi
+
   frontend-build:
     name: Frontend production build
     runs-on: ubuntu-latest
@@ -30,6 +47,8 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           persist-credentials: false
+      - name: Restore Twenty Enterprise files (not in this repository)
+        run: bash self-host/restore-enterprise-files.sh
       - uses: ./.github/actions/yarn-install
       - name: Build frontend dependencies serially
         run: yarn nx run-many -t build -p twenty-front-component-renderer --parallel=1
@@ -51,6 +70,8 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           persist-credentials: false
+      - name: Restore Twenty Enterprise files (not in this repository)
+        run: bash self-host/restore-enterprise-files.sh
       - uses: ./.github/actions/yarn-install
       - name: Build shared test dependencies
         run: yarn nx run twenty-shared:build
