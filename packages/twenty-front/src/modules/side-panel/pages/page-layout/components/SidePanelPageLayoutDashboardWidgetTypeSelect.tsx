@@ -20,6 +20,7 @@ import { isFrontComponentAvailableInWidgetPicker } from '@/side-panel/pages/page
 import { SelectableListItem } from '@/ui/layout/selectable-list/components/SelectableListItem';
 import { useAtomComponentState } from '@/ui/utilities/state/jotai/hooks/useAtomComponentState';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
+import { useIsFeatureEnabled } from '@/workspace/hooks/useIsFeatureEnabled';
 import { useQuery } from '@apollo/client/react';
 import { t } from '@lingui/core/macro';
 import { CoreObjectNameSingular, SidePanelPages } from 'twenty-shared/types';
@@ -32,6 +33,7 @@ import {
   IconTable,
 } from 'twenty-ui/icon';
 import {
+  FeatureFlagKey,
   type FrontComponent,
   PageLayoutType,
   WidgetConfigurationType,
@@ -47,6 +49,10 @@ export const SidePanelPageLayoutDashboardWidgetTypeSelect = () => {
   const { navigatePageLayoutSidePanel } = useNavigatePageLayoutSidePanel();
 
   const { buildBarChartFieldSelection } = useOpportunityDefaultChartConfig();
+
+  const isChartWidgetsEnabled = useIsFeatureEnabled(
+    FeatureFlagKey.IS_CHART_WIDGETS_ENABLED,
+  );
 
   const pageLayoutDraft = useAtomComponentStateValue(
     pageLayoutDraftComponentState,
@@ -253,7 +259,7 @@ export const SidePanelPageLayoutDashboardWidgetTypeSelect = () => {
   };
 
   const selectableItemIds = [
-    'chart',
+    ...(isChartWidgetsEnabled ? ['chart'] : []),
     'record-table',
     'iframe',
     'rich-text',
@@ -263,17 +269,19 @@ export const SidePanelPageLayoutDashboardWidgetTypeSelect = () => {
   return (
     <SidePanelList selectableItemIds={selectableItemIds}>
       <SidePanelGroup heading={t`Standard widgets`}>
-        <SelectableListItem
-          itemId="chart"
-          onEnter={handleNavigateToGraphTypeSelect}
-        >
-          <CommandMenuItem
-            Icon={IconChartPie}
-            label={t`Chart`}
-            id="chart"
-            onClick={handleNavigateToGraphTypeSelect}
-          />
-        </SelectableListItem>
+        {isChartWidgetsEnabled && (
+          <SelectableListItem
+            itemId="chart"
+            onEnter={handleNavigateToGraphTypeSelect}
+          >
+            <CommandMenuItem
+              Icon={IconChartPie}
+              label={t`Chart`}
+              id="chart"
+              onClick={handleNavigateToGraphTypeSelect}
+            />
+          </SelectableListItem>
+        )}
         <SelectableListItem
           itemId="record-table"
           onEnter={handleNavigateToRecordTableSettings}

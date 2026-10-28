@@ -26,6 +26,8 @@ import { activeTabIdComponentState } from '@/ui/layout/tab-list/states/activeTab
 import { useWorkspaceSurface } from '@/ui/layout/hooks/useWorkspaceSurface';
 import { useWorkspaceSurfaceScopedComponentInstanceId } from '@/ui/layout/hooks/useWorkspaceSurfaceScopedComponentInstanceId';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
+import { useIsFeatureEnabled } from '@/workspace/hooks/useIsFeatureEnabled';
+import { FeatureFlagKey } from '~/generated-metadata/graphql';
 import { useLingui } from '@lingui/react/macro';
 import { getAppPath, getSettingsPath, isDefined } from 'twenty-shared/utils';
 import {
@@ -62,6 +64,9 @@ export const SettingsObjectDetailPage = () => {
     findObjectMetadataItemByNamePlural(updatedObjectNamePlural);
 
   const isDDLLocked = useAtomStateValue(isDDLLockedState);
+  const isRecordPageLayoutEditingEnabled = useIsFeatureEnabled(
+    FeatureFlagKey.IS_RECORD_PAGE_LAYOUT_EDITING_ENABLED,
+  );
 
   const readonly =
     isObjectMetadataReadOnly({
@@ -124,7 +129,8 @@ export const SettingsObjectDetailPage = () => {
       Icon: IconAppWindow,
       hide:
         objectMetadataItem.isRemote ||
-        objectMetadataItem.nameSingular === CoreObjectNameSingular.Dashboard,
+        objectMetadataItem.nameSingular === CoreObjectNameSingular.Dashboard ||
+        !isRecordPageLayoutEditingEnabled,
     },
   ];
 

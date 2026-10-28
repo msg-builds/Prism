@@ -22,6 +22,33 @@ export const PUBLIC_FEATURE_FLAGS: PublicFeatureFlag[] = [
       icon: 'IconApi',
     },
   },
+  {
+    key: FeatureFlagKey.IS_DASHBOARDS_ENABLED,
+    metadata: {
+      label: 'Dashboards',
+      description:
+        'Show dashboards in the sidebar and let members open and edit them. Turning this off hides them; saved dashboards are kept.',
+      icon: 'IconLayoutDashboard',
+    },
+  },
+  {
+    key: FeatureFlagKey.IS_CHART_WIDGETS_ENABLED,
+    metadata: {
+      label: 'Charts',
+      description:
+        'Show chart widgets on dashboards and allow adding new ones. Turning this off hides charts; their settings are kept.',
+      icon: 'IconChartBar',
+    },
+  },
+  {
+    key: FeatureFlagKey.IS_RECORD_PAGE_LAYOUT_EDITING_ENABLED,
+    metadata: {
+      label: 'Record page layout editing',
+      description:
+        'Let members with the Layouts permission rearrange tabs and widgets on record pages. Turning this off keeps the current layouts.',
+      icon: 'IconPerspective',
+    },
+  },
   ...(process.env.CLOUDFLARE_API_KEY
     ? [
         // {

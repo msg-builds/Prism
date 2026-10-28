@@ -5,6 +5,7 @@ import { getAppPath, isDefined } from 'twenty-shared/utils';
 import { WorkspaceRouteUnavailable } from '@/ui/layout/page/components/WorkspaceRouteUnavailable';
 import { findCoreObjectShowPage } from '@/object-core/utils/findCoreObjectShowPage';
 import { isWorkspaceWorkflowVersionRouteHidden } from '@/object-core/workflows/utils/isWorkspaceWorkflowVersionRouteHidden';
+import { useFeatureHiddenObjectNameSingulars } from '@/object-metadata/hooks/useFeatureHiddenObjectNameSingulars';
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
 import { useWorkspaceSurface } from '@/ui/layout/hooks/useWorkspaceSurface';
 import { AiChatThreadPageContent } from '~/pages/ai-chat/AiChatThreadPageContent';
@@ -17,6 +18,8 @@ export const RecordShowPage = () => {
   const parameters = useParams<RecordShowPageParameters>();
   const workspaceSurface = useWorkspaceSurface();
   const { objectMetadataItems } = useObjectMetadataItems();
+  const featureHiddenObjectNameSingulars =
+    useFeatureHiddenObjectNameSingulars();
 
   const isInSidePanel = workspaceSurface.type === 'side-panel';
   const isRouteObjectMetadataAvailable =
@@ -52,7 +55,9 @@ export const RecordShowPage = () => {
   if (
     isWorkspaceWorkflowVersionRouteHidden({
       objectNameSingular: parameters.objectNameSingular,
-    })
+    }) ||
+    (isDefined(parameters.objectNameSingular) &&
+      featureHiddenObjectNameSingulars.includes(parameters.objectNameSingular))
   ) {
     return <WorkspaceRouteUnavailable />;
   }

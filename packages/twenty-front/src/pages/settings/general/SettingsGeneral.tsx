@@ -9,6 +9,7 @@ import { useSettingsActiveTabId } from '@/settings/components/layout/useSettings
 import { SettingsWorkspaceDomainCard } from '@/settings/domains/components/SettingsWorkspaceDomainCard';
 import { SettingsLogs } from '@/settings/event-logs/components/SettingsLogs';
 import { SettingsOpenLogConsoleCard } from '@/settings/event-logs/components/SettingsOpenLogConsoleCard';
+import { SettingsLabContent } from '@/settings/lab/components/SettingsLabContent';
 import { DeleteWorkspace } from '@/settings/profile/components/DeleteWorkspace';
 import { useHasPermissionFlag } from '@/settings/roles/hooks/useHasPermissionFlag';
 import { SettingsSecuritySettings } from '@/settings/security/components/SettingsSecuritySettings';
@@ -92,6 +93,13 @@ export const SettingsGeneral = () => {
             <SettingsWorkspaceDomainCard />
           </Section.Root>
         )}
+        <Section.Root>
+          <Section.Header
+            title={t`Features`}
+            description={t`Turn optional features on or off for everyone in this workspace. Turning one off hides it and keeps its data.`}
+          />
+          <SettingsLabContent />
+        </Section.Root>
         <Section.Root>
           <DeleteWorkspace />
         </Section.Root>

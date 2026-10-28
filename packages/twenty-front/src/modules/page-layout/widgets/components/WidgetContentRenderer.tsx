@@ -1,4 +1,5 @@
 import { type PageLayoutWidget } from '@/page-layout/types/PageLayoutWidget';
+import { PageLayoutWidgetStatusDisplay } from '@/page-layout/widgets/components/PageLayoutWidgetStatusDisplay';
 import { CalendarWidget } from '@/page-layout/widgets/calendar/components/CalendarWidget';
 import { CallRecordingWidget } from '@/page-layout/widgets/call-recording/components/CallRecordingWidget';
 import { ChatWidget } from '@/page-layout/widgets/chat/components/ChatWidget';
@@ -21,7 +22,9 @@ import { WorkflowRunWidget } from '@/page-layout/widgets/workflow/components/Wor
 import { WorkflowVersionWidget } from '@/page-layout/widgets/workflow/components/WorkflowVersionWidget';
 import { RecordTableWidgetRenderer } from '@/page-layout/widgets/record-table/components/RecordTableWidgetRenderer';
 import { WorkflowWidget } from '@/page-layout/widgets/workflow/components/WorkflowWidget';
-import { WidgetType } from '~/generated-metadata/graphql';
+import { useIsFeatureEnabled } from '@/workspace/hooks/useIsFeatureEnabled';
+import { t } from '@lingui/core/macro';
+import { FeatureFlagKey, WidgetType } from '~/generated-metadata/graphql';
 
 type WidgetContentRendererProps = {
   widget: PageLayoutWidget;
@@ -30,9 +33,22 @@ type WidgetContentRendererProps = {
 export const WidgetContentRenderer = ({
   widget,
 }: WidgetContentRendererProps) => {
+  const isChartWidgetsEnabled = useIsFeatureEnabled(
+    FeatureFlagKey.IS_CHART_WIDGETS_ENABLED,
+  );
+
   switch (widget.type) {
     case WidgetType.GRAPH:
-      return <GraphWidgetRenderer widget={widget} />;
+      return isChartWidgetsEnabled ? (
+        <GraphWidgetRenderer widget={widget} />
+      ) : (
+        <PageLayoutWidgetStatusDisplay
+          tooltipId={`widget-charts-off-tooltip-${widget.id}`}
+          text={t`Charts are turned off`}
+          tooltipContent={t`A workspace admin can turn on Charts in Settings > General > Features. This chart's settings are kept.`}
+          color="gray"
+        />
+      );
 
     case WidgetType.IFRAME:
       return <IframeWidget widget={widget} />;

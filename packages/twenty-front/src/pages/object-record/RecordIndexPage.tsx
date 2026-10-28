@@ -1,5 +1,6 @@
 import { WorkspaceRouteUnavailable } from '@/ui/layout/page/components/WorkspaceRouteUnavailable';
 import { contextStoreCurrentObjectMetadataItemIdComponentState } from '@/context-store/states/contextStoreCurrentObjectMetadataItemIdComponentState';
+import { useFeatureHiddenObjectNameSingulars } from '@/object-metadata/hooks/useFeatureHiddenObjectNameSingulars';
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
 import { RecordIndexContainerGater } from '@/object-record/record-index/components/RecordIndexContainerGater';
 import { isWorkspaceWorkflowVersionRouteHidden } from '@/object-core/workflows/utils/isWorkspaceWorkflowVersionRouteHidden';
@@ -29,6 +30,8 @@ export const RecordIndexPage = () => {
   );
 
   const { objectMetadataItems } = useObjectMetadataItems();
+  const featureHiddenObjectNameSingulars =
+    useFeatureHiddenObjectNameSingulars();
   const metadataStore = useAtomFamilyStateValue(
     metadataStoreState,
     'objectMetadataItems',
@@ -69,7 +72,8 @@ export const RecordIndexPage = () => {
   if (
     isWorkspaceWorkflowVersionRouteHidden({
       objectNameSingular: routeObjectMetadataItem?.nameSingular,
-    })
+    }) ||
+    featureHiddenObjectNameSingulars.includes(objectMetadataItem.nameSingular)
   ) {
     return <WorkspaceRouteUnavailable />;
   }

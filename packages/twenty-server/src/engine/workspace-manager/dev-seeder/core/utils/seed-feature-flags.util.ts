@@ -10,6 +10,9 @@ const DEFAULT_SEEDED_FEATURE_FLAGS: Partial<Record<FeatureFlagKey, boolean>> = {
   [FeatureFlagKey.IS_CALENDAR_EVENT_SHARED_ACROSS_CHANNELS_ENABLED]: true,
   [FeatureFlagKey.IS_AI_CHAT_INBOX_ENABLED]: true,
   [FeatureFlagKey.IS_APPLICATION_MONITORING_ENABLED]: true,
+  [FeatureFlagKey.IS_DASHBOARDS_ENABLED]: true,
+  [FeatureFlagKey.IS_CHART_WIDGETS_ENABLED]: true,
+  [FeatureFlagKey.IS_RECORD_PAGE_LAYOUT_EDITING_ENABLED]: true,
 };
 
 type SeedFeatureFlagsArgs = {

@@ -30,6 +30,7 @@ import { useNavigationMenuObjectMetadataForSection } from '@/navigation-menu-ite
 import { getAvailableObjectMetadataForNewSidebarItem } from '@/navigation-menu-item/edit/utils/getAvailableObjectMetadataForNewSidebarItem';
 import { isViewDisplayableInNavigationMenu } from '@/navigation-menu-item/edit/utils/isViewDisplayableInNavigationMenu';
 import { ObjectMetadataIcon } from '@/object-metadata/components/ObjectMetadataIcon';
+import { useFeatureHiddenObjectNameSingulars } from '@/object-metadata/hooks/useFeatureHiddenObjectNameSingulars';
 import { useFilteredObjectMetadataItems } from '@/object-metadata/hooks/useFilteredObjectMetadataItems';
 import { useObjectMetadataItems } from '@/object-metadata/hooks/useObjectMetadataItems';
 import { getAvatarShape } from '@/object-metadata/utils/getAvatarShape';
@@ -78,6 +79,8 @@ export const useNavigationMenuItemAddOptions = ({
   const { objectMetadataItems } = useObjectMetadataItems();
   const { activeNonSystemObjectMetadataItems } =
     useFilteredObjectMetadataItems();
+  const featureHiddenObjectNameSingulars =
+    useFeatureHiddenObjectNameSingulars();
   const {
     views,
     objectMetadataIdsWithIndexView,
@@ -99,8 +102,14 @@ export const useNavigationMenuItemAddOptions = ({
     objectMetadataItemsWithViews,
     availableSystemObjectMetadataItemsForView,
   } = getAvailableObjectMetadataForNewSidebarItem({
-    objectMetadataItems,
-    activeNonSystemObjectMetadataItems,
+    objectMetadataItems: objectMetadataItems.filter(
+      (item) => !featureHiddenObjectNameSingulars.includes(item.nameSingular),
+    ),
+    activeNonSystemObjectMetadataItems:
+      activeNonSystemObjectMetadataItems.filter(
+        (item) =>
+          !featureHiddenObjectNameSingulars.includes(item.nameSingular),
+      ),
     objectMetadataIdsWithIndexView,
     objectMetadataIdsWithDisplayableViews: new Set(
       views
