@@ -2,6 +2,7 @@
 # listens publicly; the API, /mcp and Mailpit bind to loopback. Add one overlay:
 #   compose.platform.yml  shared Postgres/Redis/S3 (connection env file)
 #   compose.bundled.yml   own Postgres and Redis, local file storage
+#   compose.agents.yml    (optional) also join the agents' network as `prism`
 # Run: docker compose -p prism --env-file .env -f compose.yml -f compose.<x>.yml up -d
 # (.env from env.example; PRISM_IMAGE is a tag built by ../build-image.sh)
 name: prism

@@ -1,0 +1,14 @@
+# Agents' network: Nebula's agents reach the server as http://prism:3000
+# (API, /mcp). Add after the platform overlay; the server stays off public ports.
+services:
+  server:
+    networks:
+      default: {}
+      platform: {}
+      agents:
+        aliases: [prism]
+
+networks:
+  agents:
+    name: ${PRISM_AGENTS_NETWORK:-stargate-agents}
+    external: true

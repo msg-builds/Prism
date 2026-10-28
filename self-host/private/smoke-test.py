@@ -6,6 +6,8 @@
   smoke-test.py tools     list /mcp tools using the API key
   smoke-test.py call NAME JSON   call one /mcp tool
   smoke-test.py invite EMAIL     send a workspace invite (branded email check)
+  smoke-test.py create-key NAME FILE   new API key (Admin role, one year) for
+                          one caller, written to FILE (mode 600), never stdout
 
 Env: PRISM_URL (default http://127.0.0.1:3130), PRISM_KEY_FILE,
 PRISM_ADMIN_EMAIL and PRISM_ADMIN_PASSWORD (setup only).
@@ -98,6 +100,41 @@ def setup():
     print("api key", api_key["id"], "expires", expires, "->", KEY_FILE)
 
 
+def login():
+    email = os.environ["PRISM_ADMIN_EMAIL"]
+    password = os.environ["PRISM_ADMIN_PASSWORD"]
+    login_token = gql(
+        "mutation($e:String!,$p:String!,$o:String!){getLoginTokenFromCredentials("
+        "email:$e,password:$p,origin:$o){loginToken{token}}}",
+        {"e": email, "p": password, "o": URL},
+    )["getLoginTokenFromCredentials"]["loginToken"]["token"]
+    return gql(
+        "mutation($t:String!,$o:String!){getAuthTokensFromLoginToken(loginToken:$t,origin:$o)"
+        "{tokens{accessOrWorkspaceAgnosticToken{token}}}}",
+        {"t": login_token, "o": URL},
+    )["getAuthTokensFromLoginToken"]["tokens"]["accessOrWorkspaceAgnosticToken"]["token"]
+
+
+def create_key(name, path):
+    access = login()
+    roles = gql("{getRoles{id label}}", token=access)["getRoles"]
+    admin = next(role for role in roles if role["label"].lower() == "admin")
+    expires = (datetime.now(timezone.utc) + timedelta(days=365)).isoformat()
+    api_key = gql(
+        "mutation($input:CreateApiKeyInput!){createApiKey(input:$input){id}}",
+        {"input": {"name": name, "expiresAt": expires, "roleId": admin["id"]}},
+        access,
+    )["createApiKey"]
+    token = gql(
+        "mutation($apiKeyId:UUID!,$expiresAt:String!){generateApiKeyToken("
+        "apiKeyId:$apiKeyId,expiresAt:$expiresAt){token}}",
+        {"apiKeyId": api_key["id"], "expiresAt": expires},
+        access,
+    )["generateApiKeyToken"]["token"]
+    write_secret(path, token)
+    print("api key", name, api_key["id"], "expires", expires, "->", path)
+
+
 def mcp(method, params=None):
     result = post(
         "/mcp",
@@ -122,6 +159,8 @@ def main():
     elif command == "call":
         result = mcp("tools/call", {"name": sys.argv[2], "arguments": json.loads(sys.argv[3])})
         print(json.dumps(result, indent=1)[:6000])
+    elif command == "create-key":
+        create_key(sys.argv[2], sys.argv[3])
     elif command == "invite":
         result = gql(
             "mutation($emails:[String!]!){sendInvitations(emails:$emails){success errors}}",
