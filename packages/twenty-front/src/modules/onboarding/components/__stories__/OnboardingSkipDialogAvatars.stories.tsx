@@ -12,8 +12,7 @@ const meta: Meta<typeof OnboardingSkipDialogAvatars> = {
   args: {
     avatars: ONBOARDING_NETWORK_PREVIEW_PEOPLE.map((person) => ({
       id: person.id,
-      name: '',
-      src: person.avatarUrl,
+      name: person.name,
       shape: 'circle',
     })),
   },
