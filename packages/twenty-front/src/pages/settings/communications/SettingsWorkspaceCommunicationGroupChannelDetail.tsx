@@ -1,4 +1,3 @@
-import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
 import { SettingsAccountsMessageChannelDetails } from '@/settings/accounts/components/SettingsAccountsMessageChannelDetails';
 import { useDeleteEmailGroupChannel } from '@/settings/accounts/hooks/useDeleteEmailGroupChannel';
 import { useMyMessageChannels } from '@/settings/accounts/hooks/useMyMessageChannels';
@@ -12,7 +11,6 @@ import { SettingsSkeletonLoader } from '@/settings/components/SettingsSkeletonLo
 import { SettingsPageLayout } from '@/settings/components/layout/SettingsPageLayout';
 import { SettingsEmailingDomainDnsRecords } from '@/settings/emailing-domains/components/SettingsEmailingDomainDnsRecords';
 import { SettingsEmailingDomainVerifyButton } from '@/settings/emailing-domains/components/SettingsEmailingDomainVerifyButton';
-import { getDocumentationUrl } from '@/support/utils/getDocumentationUrl';
 import { SettingsTextInput } from '@/ui/input/components/SettingsTextInput';
 import { ConfirmationDialog } from '@/ui/layout/dialog/components/ConfirmationDialog';
 import { useDialog } from '@/ui/layout/dialog/hooks/useDialog';
@@ -28,7 +26,6 @@ import { getSettingsPath, isDefined } from 'twenty-shared/utils';
 import { useToast } from 'twenty-ui/components/feedback';
 import { Section } from 'twenty-ui/components/layout';
 import {
-  IconArrowUpRight,
   IconCopy,
   IconMail,
   IconTrash,
@@ -41,7 +38,6 @@ import { useNavigateSettings } from '~/hooks/useNavigateSettings';
 import { NotFound } from '~/pages/not-found/NotFound';
 import channelSetupCoverDark from '~/pages/settings/communications/assets/channel-setup-cover-dark.png';
 import channelSetupCoverLight from '~/pages/settings/communications/assets/channel-setup-cover-light.png';
-import { openUrlInNewTab } from '~/utils/openUrlInNewTab';
 
 const DELETE_EMAIL_GROUP_MODAL_ID = 'delete-email-group-channel-modal';
 
@@ -63,7 +59,6 @@ const StyledSendingDomainColumn = styled.div`
 
 export const SettingsWorkspaceCommunicationGroupChannelDetail = () => {
   const { t } = useLingui();
-  const currentWorkspaceMember = useAtomStateValue(currentWorkspaceMemberState);
   const navigateSettings = useNavigateSettings();
   const { messageChannelId } = useParams<{ messageChannelId: string }>();
   const { channels, loading } = useMyMessageChannels();
@@ -187,21 +182,7 @@ export const SettingsWorkspaceCommunicationGroupChannelDetail = () => {
               <SettingsDiscoveryHeroCardFooter
                 Icon={IconMail}
                 title={t`Set up forwarding and DNS`}
-                description={t`Follow the guide for your email provider.`}
-                action={
-                  <Button
-                    size="sm"
-                    endIcon={<IconArrowUpRight />}
-                    onClick={() =>
-                      openUrlInNewTab(
-                        getDocumentationUrl({
-                          locale: currentWorkspaceMember?.locale,
-                          path: '/user-guide/calendar-emails/how-tos/forward-a-shared-inbox-from-any-mail-provider',
-                        }),
-                      )
-                    }
-                  >{t`Read documentation`}</Button>
-                }
+                description={t`Follow your email provider's forwarding and DNS instructions.`}
               />
             }
           />

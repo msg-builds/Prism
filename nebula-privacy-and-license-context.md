@@ -18,6 +18,15 @@ When designing, implementing or documenting Prism features:
 4. Do not reuse Twenty's terms, privacy policy or data-processing agreement as if they were Nebula's or Prism's. Do not rename parties in a pre-signed or existing agreement. If Prism screens or emails require a future policy link, hide it or use a clearly inactive placeholder until the real Nebula destination is supplied.
 5. Coordinate customer-facing privacy and terms at the Nebula level when warranted. A separate public-facing Prism legal page is not assumed necessary. This does not eliminate any applicable privacy, contractual or security obligation.
 
+## Current handling (2026-10-28)
+
+Prism presents no legal texts of its own. Users reach it through Nebula, whose privacy notice and terms apply.
+
+- **Removed:** Twenty's terms, privacy and DPA links and pages are removed or unrouted.
+- **DPA API refuses:** the API that generates Twenty's pre-signed DPA answers "Legal agreements are handled by Nebula".
+- **No Twenty contacts:** the OpenAPI document carries no Twenty terms or contact address.
+- **Inputs for Nebula's privacy notice:** the facts about what Prism stores and sends are kept in the Stargate monorepo (`PRISM.md` → Privacy and terms).
+
 ## Separate question: Twenty and other software licenses
 
 Prism is a modified fork of Twenty. Preserve the applicable copyright notices, license texts, third-party notices, and commercial-license boundaries in the repository and applicable distributions. The Twenty name and logo are trademarks; truthful upstream attribution is distinct from using them as Prism branding.

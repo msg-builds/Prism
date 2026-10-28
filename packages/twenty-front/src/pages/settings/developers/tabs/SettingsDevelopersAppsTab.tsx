@@ -1,9 +1,7 @@
 import { useRefetchOnApplicationRegistrationChange } from '@/applications/hooks/useRefetchOnApplicationRegistrationChange';
-import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
 import { TWENTY_CLI_CREATE_APP_COMMANDS } from '@/settings/developers/constants/TwentyCliCreateAppCommands';
 import { TWENTY_CLI_LOGIN_COMMAND } from '@/settings/developers/constants/TwentyCliLoginCommand';
 import { useHasPermissionFlag } from '@/settings/roles/hooks/useHasPermissionFlag';
-import { getDocumentationUrl } from '@/support/utils/getDocumentationUrl';
 import { Table } from '@/ui/layout/table/components/Table';
 import { TableHeader } from '@/ui/layout/table/components/TableHeader';
 import { TableRow } from '@/ui/layout/table/components/TableRow';
@@ -17,7 +15,7 @@ import { getSettingsPath } from 'twenty-shared/utils';
 import { CommandBlock } from 'twenty-ui/components/data-display';
 import { SearchInput } from 'twenty-ui/components/input';
 import { Section } from 'twenty-ui/components/layout';
-import { IconArrowUpRight, IconChevronRight, IconCopy } from 'twenty-ui/icon';
+import { IconChevronRight, IconCopy } from 'twenty-ui/icon';
 import { Button } from 'twenty-ui/primitives/input';
 import { useTheme, themeCssVariables } from 'twenty-ui/theme';
 import {
@@ -31,13 +29,6 @@ import {
   SettingsApplicationTableRow,
 } from '~/pages/settings/applications/components/SettingsApplicationTableRow';
 import { SettingsClaimApplicationSection } from '~/pages/settings/applications/components/SettingsClaimApplicationSection';
-import { openUrlInNewTab } from '~/utils/openUrlInNewTab';
-
-const StyledButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: ${themeCssVariables.spacing[2]};
-`;
 
 const StyledSearchInputContainer = styled.div`
   padding-bottom: ${themeCssVariables.spacing[2]};
@@ -51,7 +42,6 @@ const StyledTableRowsContainer = styled.div`
 export const SettingsDevelopersAppsTab = () => {
   const { t } = useLingui();
   const theme = useTheme();
-  const currentWorkspaceMember = useAtomStateValue(currentWorkspaceMemberState);
 
   const { copyToClipboard } = useCopyToClipboard();
 
@@ -101,21 +91,6 @@ export const SettingsDevelopersAppsTab = () => {
           description={t`You can either create a private app or share it to others`}
         />
         <CommandBlock commands={createCommands} actions={createCopyButton} />
-        <StyledButtonContainer>
-          <Button
-            startIcon={<IconArrowUpRight />}
-            size="sm"
-            onClick={() =>
-              openUrlInNewTab(
-                getDocumentationUrl({
-                  locale: currentWorkspaceMember?.locale,
-                  path: '/developers/extend/apps/getting-started',
-                }),
-              )
-            }
-            variant="outline"
-          >{t`Read documentation`}</Button>
-        </StyledButtonContainer>
       </Section.Root>
 
       {registrations.length > 0 && (

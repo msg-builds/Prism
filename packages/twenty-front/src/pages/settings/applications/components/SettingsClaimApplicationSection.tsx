@@ -1,7 +1,5 @@
 import { ApplicationDisplay } from '@/applications/components/ApplicationDisplay';
-import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
 import { useHasPermissionFlag } from '@/settings/roles/hooks/useHasPermissionFlag';
-import { getDocumentationUrl } from '@/support/utils/getDocumentationUrl';
 import { SettingsTextInput } from '@/ui/input/components/SettingsTextInput';
 import { TooltipDelay } from '@/ui/layout/tooltip/constants/TooltipDelay';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
@@ -31,7 +29,6 @@ import {
   SyncMarketplaceCatalogDocument,
 } from '~/generated-metadata/graphql';
 import { getClaimErrorContent } from '~/pages/settings/applications/utils/getClaimErrorContent';
-import { openUrlInNewTab } from '~/utils/openUrlInNewTab';
 
 export const CLAIM_ERROR_CODE_SEARCH_PARAM = 'claimErrorCode';
 
@@ -82,7 +79,6 @@ export const SettingsClaimApplicationSection = () => {
   const { t } = useLingui();
   const { enqueueToast } = useToast();
 
-  const currentWorkspaceMember = useAtomStateValue(currentWorkspaceMemberState);
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -230,19 +226,6 @@ export const SettingsClaimApplicationSection = () => {
             status="error"
             title={t`Could not claim this application`}
             description={i18n._(claimError.message)}
-            action={
-              <Callout.Action
-                type="button"
-                onClick={() =>
-                  openUrlInNewTab(
-                    getDocumentationUrl({
-                      locale: currentWorkspaceMember?.locale,
-                      path: claimError.docPath,
-                    }),
-                  )
-                }
-              >{t`Read documentation`}</Callout.Action>
-            }
             closeLabel={t`Close`}
             onDismiss={dismissClaimError}
           />
