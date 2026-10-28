@@ -52,4 +52,16 @@ export const SETTINGS_ADMIN_FEATURE_FLAG_METADATA: Record<
     label: msg`App monitoring`,
     description: msg`Show app owners and instance admins the health of an app across every workspace that installed it.`,
   },
+  [FeatureFlagKey.IS_DASHBOARDS_ENABLED]: {
+    label: msg`Dashboards`,
+    description: msg`Show dashboards in the sidebar and let members open and edit them. Saved dashboards are kept when off.`,
+  },
+  [FeatureFlagKey.IS_CHART_WIDGETS_ENABLED]: {
+    label: msg`Charts`,
+    description: msg`Show chart widgets on dashboards and allow adding new ones. Chart settings are kept when off.`,
+  },
+  [FeatureFlagKey.IS_RECORD_PAGE_LAYOUT_EDITING_ENABLED]: {
+    label: msg`Record page layout editing`,
+    description: msg`Let members with the Layouts permission rearrange tabs and widgets on record pages.`,
+  },
 };
