@@ -1,12 +1,24 @@
-# Agents' network: Nebula's agents reach the server as http://prism:3000
-# (API, /mcp). Add after the platform overlay; the server stays off public ports.
+# Agents' network: Nebula's agents reach the server as http://prism:3000 (API,
+# /mcp), and Prism's webhooks reach Paperclip there. The worker joins because it
+# is what sends webhooks. Add after the platform overlay; nothing gets a public port.
+x-agents-env: &agents-env
+  # Prism blocks private addresses (SSRF guard); Paperclip's container is the one exception
+  OUTBOUND_HTTP_ALLOWED_INTERNAL_HOSTS: ${PRISM_WEBHOOK_HOSTS:-nebula-clip-paperclip-1}
+
 services:
   server:
+    environment: *agents-env
     networks:
       default: {}
       platform: {}
       agents:
         aliases: [prism]
+  worker:
+    environment: *agents-env
+    networks:
+      default: {}
+      platform: {}
+      agents: {}
 
 networks:
   agents:
