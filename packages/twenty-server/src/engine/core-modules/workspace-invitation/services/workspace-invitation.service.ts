@@ -398,7 +398,7 @@ export class WorkspaceInvitationService {
         const subject = i18n._(joinTeamMsg);
 
         await this.emailService.send({
-          from: `${sender.name.firstName} ${sender.name.lastName} (via Nebula) <${this.twentyConfigService.get('EMAIL_FROM_ADDRESS')}>`,
+          from: `${`${sender.name.firstName} ${sender.name.lastName}`.trim()} (via Nebula) <${this.twentyConfigService.get('EMAIL_FROM_ADDRESS')}>`,
           to: invitation.value.email,
           subject,
           text,

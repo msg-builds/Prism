@@ -766,7 +766,7 @@ export class AuthService {
     });
 
     const emailTemplate = PasswordUpdateNotifyEmail({
-      userName: `${user.firstName} ${user.lastName}`,
+      userName: `${user.firstName} ${user.lastName}`.trim(),
       email: user.email,
       link: this.domainServerConfigService.getBaseUrl().toString(),
       locale: firstUserWorkspace.locale,

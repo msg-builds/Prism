@@ -63,9 +63,8 @@ export const getOnboardingCreditsProgress = ({
     (step) => ONBOARDING_STATUS_BY_CREDITS_STEP[step] === onboardingStatus,
   );
 
-  const hasProfileName =
-    isNonEmptyString(profileName?.firstName) &&
-    isNonEmptyString(profileName?.lastName);
+  // Prism's profile step asks for a first name only
+  const hasProfileName = isNonEmptyString(profileName?.firstName);
 
   const getCountedCredits = (step: OnboardingCreditsStep) => {
     if (isStepDone(step)) {

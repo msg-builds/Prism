@@ -36,7 +36,7 @@ const PROFILE_NAME_CASES: {
   },
   {
     title: 'prefer a typed empty name over the saved names',
-    onboardingCreateProfileDraft: { firstName: 'Tim', lastName: '' },
+    onboardingCreateProfileDraft: { firstName: '', lastName: 'Apple' },
     workspaceMemberName: { firstName: 'Tim', lastName: 'Apple' },
     earnedCredits: 0,
   },

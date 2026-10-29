@@ -20,7 +20,7 @@ export const buildOptimisticActorFieldValueFromCurrentWorkspaceMember = (
     id: workspaceMemberId,
     name: { firstName, lastName },
   } = currentWorkspaceMember;
-  const name = `${firstName} ${lastName}`;
+  const name = `${firstName} ${lastName}`.trim();
   return {
     ...defaultActorFieldValue,
     name: name,

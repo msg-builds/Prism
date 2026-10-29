@@ -2,7 +2,6 @@ import { currentUserState } from '@/auth/states/currentUserState';
 import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
 import { currentWorkspaceMembersState } from '@/auth/states/currentWorkspaceMembersState';
 import { getToastOptionsFromError } from '@/error-handler/utils/getToastOptionsFromError';
-import { OnboardingProfilePictureUploader } from '@/onboarding/components/OnboardingProfilePictureUploader';
 import { OnboardingRewardMainButton } from '@/onboarding/components/OnboardingRewardMainButton';
 import { OnboardingStepAnimatedItem } from '@/onboarding/components/OnboardingStepAnimatedItem';
 import { StyledOnboardingStepHeading } from '@/onboarding/components/StyledOnboardingStepHeading';
@@ -33,7 +32,7 @@ import { Key } from 'ts-key-enum';
 import { isDefined } from 'twenty-shared/utils';
 import { doNotTranslate } from 'twenty-shared/i18n';
 import { useToast } from 'twenty-ui/components/feedback';
-import { MOBILE_VIEWPORT, themeCssVariables } from 'twenty-ui/theme';
+import { themeCssVariables } from 'twenty-ui/theme';
 import { z } from 'zod';
 
 const StyledForm = styled.div`
@@ -45,23 +44,6 @@ const StyledForm = styled.div`
   width: ${ONBOARDING_CONTENT_BLOCK_WIDTH}px;
 `;
 
-const StyledNameRow = styled.div`
-  align-items: flex-end;
-  display: flex;
-  gap: ${themeCssVariables.spacing[2]};
-  width: 100%;
-
-  @media (max-width: ${MOBILE_VIEWPORT}px) {
-    align-items: stretch;
-    flex-direction: column;
-  }
-`;
-
-const StyledNameField = styled.div`
-  flex: 1 1 0;
-  min-width: 0;
-`;
-
 const StyledButtonContainer = styled.div`
   display: flex;
   max-width: 100%;
@@ -69,14 +51,10 @@ const StyledButtonContainer = styled.div`
 `;
 
 const firstNameErrorMessage = msg`First name can not be empty`;
-const lastNameErrorMessage = msg`Last name can not be empty`;
 
 const validationSchema = z.object({
   firstName: z.string().min(1, {
     error: i18n._(firstNameErrorMessage),
-  }),
-  lastName: z.string().min(1, {
-    error: i18n._(lastNameErrorMessage),
   }),
   jobTitle: z.string(),
 });
@@ -122,19 +100,18 @@ export const CreateProfile = () => {
         initialCreateProfileDraft?.firstName ??
         currentWorkspaceMember?.name?.firstName ??
         '',
-      lastName:
-        initialCreateProfileDraft?.lastName ??
-        currentWorkspaceMember?.name?.lastName ??
-        '',
       jobTitle: currentWorkspaceMember?.jobTitle ?? '',
     },
     resolver: zodResolver(validationSchema),
   });
 
+  // Prism asks for a first name only; a last name already on the member is kept, never cleared
+  const lastName = currentWorkspaceMember?.name?.lastName ?? '';
+
   const setCreateProfileDraftFromForm = () =>
     setOnboardingCreateProfileDraft({
       firstName: getValues('firstName'),
-      lastName: getValues('lastName'),
+      lastName,
     });
 
   const onSubmit: SubmitHandler<Form> = useCallback(
@@ -143,8 +120,8 @@ export const CreateProfile = () => {
         if (!currentWorkspaceMember?.id) {
           throw new Error(doNotTranslate('User is not logged in'));
         }
-        if (!data.firstName || !data.lastName) {
-          throw new Error(doNotTranslate('First name or last name is missing'));
+        if (!data.firstName) {
+          throw new Error(doNotTranslate('First name is missing'));
         }
 
         await updateWorkspaceMemberSettings({
@@ -152,7 +129,7 @@ export const CreateProfile = () => {
           update: {
             name: {
               firstName: data.firstName,
-              lastName: data.lastName,
+              lastName,
             },
             jobTitle: data.jobTitle,
             colorScheme: doNotTranslate('System'),
@@ -166,7 +143,7 @@ export const CreateProfile = () => {
                   ...member,
                   name: {
                     firstName: data.firstName,
-                    lastName: data.lastName,
+                    lastName,
                   },
                   jobTitle: data.jobTitle,
                   colorScheme: doNotTranslate('System'),
@@ -180,7 +157,7 @@ export const CreateProfile = () => {
             return {
               ...current,
               firstName: data.firstName,
-              lastName: data.lastName,
+              lastName,
             };
           }
           return current;
@@ -200,6 +177,7 @@ export const CreateProfile = () => {
     },
     [
       currentWorkspaceMember?.id,
+      lastName,
       store,
       setNextOnboardingStatus,
       setOnboardingStepFreeCredits,
@@ -240,68 +218,32 @@ export const CreateProfile = () => {
 
       <OnboardingStepAnimatedItem index={2}>
         <StyledForm>
-          <StyledNameRow>
-            {isDefined(currentWorkspaceMember?.id) && (
-              <OnboardingProfilePictureUploader
-                workspaceMemberId={currentWorkspaceMember.id}
+          <Controller
+            name="firstName"
+            control={control}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <TextInput
+                autoFocus
+                label={t`First Name`}
+                value={value}
+                onFocus={() => setIsEditingMode(true)}
+                onBlur={() => {
+                  onBlur();
+                  setIsEditingMode(false);
+                }}
+                onChange={(firstName) => {
+                  onChange(firstName);
+                  setCreateProfileDraftFromForm();
+                }}
+                placeholder={t`Tim`}
+                error={error?.message}
+                fullWidth
               />
             )}
-            <StyledNameField>
-              <Controller
-                name="firstName"
-                control={control}
-                render={({
-                  field: { onChange, onBlur, value },
-                  fieldState: { error },
-                }) => (
-                  <TextInput
-                    autoFocus
-                    label={t`First Name`}
-                    value={value}
-                    onFocus={() => setIsEditingMode(true)}
-                    onBlur={() => {
-                      onBlur();
-                      setIsEditingMode(false);
-                    }}
-                    onChange={(firstName) => {
-                      onChange(firstName);
-                      setCreateProfileDraftFromForm();
-                    }}
-                    placeholder={t`Tim`}
-                    error={error?.message}
-                    fullWidth
-                  />
-                )}
-              />
-            </StyledNameField>
-            <StyledNameField>
-              <Controller
-                name="lastName"
-                control={control}
-                render={({
-                  field: { onChange, onBlur, value },
-                  fieldState: { error },
-                }) => (
-                  <TextInput
-                    label={t`Last name`}
-                    value={value}
-                    onFocus={() => setIsEditingMode(true)}
-                    onBlur={() => {
-                      onBlur();
-                      setIsEditingMode(false);
-                    }}
-                    onChange={(lastName) => {
-                      onChange(lastName);
-                      setCreateProfileDraftFromForm();
-                    }}
-                    placeholder={t`Apple`}
-                    error={error?.message}
-                    fullWidth
-                  />
-                )}
-              />
-            </StyledNameField>
-          </StyledNameRow>
+          />
           <Controller
             name="jobTitle"
             control={control}

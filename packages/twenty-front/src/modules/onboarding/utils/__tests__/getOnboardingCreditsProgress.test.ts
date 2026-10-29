@@ -28,10 +28,17 @@ const PROFILE_CREDITS_CASES: {
     createProfile: 0.5,
   },
   {
-    title: 'not count the profile step while a name is empty',
+    title: 'count a first name alone on the profile step',
     onboardingStatus: OnboardingStatus.PROFILE_CREATION,
     isWorkspaceCreator: true,
     profileName: { firstName: 'Tim', lastName: '' },
+    createProfile: 0.5,
+  },
+  {
+    title: 'not count the profile step while the first name is empty',
+    onboardingStatus: OnboardingStatus.PROFILE_CREATION,
+    isWorkspaceCreator: true,
+    profileName: { firstName: '', lastName: 'Apple' },
     createProfile: 0,
   },
   {

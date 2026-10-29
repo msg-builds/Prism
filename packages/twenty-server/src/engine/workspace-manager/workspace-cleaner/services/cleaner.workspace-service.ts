@@ -123,7 +123,7 @@ export class CleanerWorkspaceService {
     const emailData = {
       daysSinceInactive,
       inactiveDaysBeforeDelete: this.inactiveDaysBeforeSoftDelete,
-      userName: `${workspaceMember.name.firstName} ${workspaceMember.name.lastName}`,
+      userName: `${workspaceMember.name.firstName} ${workspaceMember.name.lastName}`.trim(),
       workspaceDisplayName: `${workspaceDisplayName}`,
       link: billingSettingsUrl,
       locale: workspaceMember.locale,
@@ -200,7 +200,7 @@ export class CleanerWorkspaceService {
   ) {
     const emailData = {
       daysSinceInactive: daysSinceInactive,
-      userName: `${workspaceMember.name.firstName} ${workspaceMember.name.lastName}`,
+      userName: `${workspaceMember.name.firstName} ${workspaceMember.name.lastName}`.trim(),
       workspaceDisplayName,
       locale: workspaceMember.locale,
     };

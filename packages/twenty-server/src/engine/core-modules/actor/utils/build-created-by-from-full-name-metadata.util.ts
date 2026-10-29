@@ -16,6 +16,6 @@ export const buildCreatedByFromFullNameMetadata = ({
 }: BuildCreatedByFromFullNameMetadataArgs): ActorMetadata => ({
   workspaceMemberId,
   source,
-  name: `${fullNameMetadata.firstName} ${fullNameMetadata.lastName}`,
+  name: `${fullNameMetadata.firstName} ${fullNameMetadata.lastName}`.trim(),
   context: {},
 });
