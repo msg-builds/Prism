@@ -66,7 +66,9 @@ export const Default: Story = {
     await canvas.findByText('Create profile');
 
     const firstName = await canvas.findByPlaceholderText('Tim');
-    await expect(canvas.getByPlaceholderText('Head of Partnerships')).toBeVisible();
+    await expect(
+      canvas.getByPlaceholderText('Head of Partnerships'),
+    ).toBeVisible();
     await expect(canvas.queryByPlaceholderText('Apple')).toBeNull();
     await expect(
       canvas.queryByRole('button', { name: 'Upload profile picture' }),
